@@ -1,52 +1,115 @@
+const todoList = () => {
+  all = []
+  const add = (todoItem) => {
+    all.push(todoItem)
+  }
+  const markAsComplete = (index) => {
+    all[index].completed = true
+  }
 
-const http = require('http')
-const fs= require("fs");
+  const overdue = () => {
+    // Write the date check condition here and return the array of overdue items accordingly.
+    // FILL YOUR CODE HERE
+    // ..
+    // ..
+    // ..
+    let ex1=[]
+    all.forEach(x => {
+        if(x["dueDate"]=== yesterday){
+            ex1.push(x);
+        }
+      })
+      return ex1;
+  }
 
-let homecontent="";
-let filecontent="";
-let reg="";
-fs.readFile("home.html",
-(err,home) => {
-if(err){
-    throw err;
+  const dueToday = () => {
+    // Write the date check condition here and return the array of todo items that are due today accordingly.
+    // FILL YOUR CODE HERE
+    // ..
+    // ..
+    // ..
+    let ex1=[]
+    all.forEach(x => {
+        if(x["dueDate"]=== today){
+            ex1.push({title:x["title"],completed:x["completed"]});
+        }
+      })
+      return ex1;
+  }
+
+  const dueLater = () => {
+    // Write the date check condition here and return the array of todo items that are due later accordingly.
+    // FILL YOUR CODE HERE
+    // ..
+    // ..
+    // ..
+    let ex1=[]
+    all.forEach(x => {
+        if(x["dueDate"]=== tomorrow){
+            ex1.push(x);
+        }
+      })
+      return ex1;
+  }
+
+  const toDisplayableList = (list) => {
+    // Format the To-Do list here, and return the output string as per the format given above.
+    // FILL YOUR CODE HERE
+    // ..
+    // ..
+    // ..
+    // return OUTPUT_STRING
+    
+    return list.map((todos) => { 
+      const complete=todos.completed ? 'x' : ' ';
+      return `[${complete}] ${todos.title} ${todos.dueDate == today ? ' ' : todos.dueDate}`
+  }).join("\n");
+  }
+
+  return { all, add, markAsComplete, overdue, dueToday, dueLater, toDisplayableList };
 }
-homecontent=home;
-});
 
-fs.readFile("project.html",
-(err,fil) => {
-    if(err)
-    {
-        throw err;
-    }
-   filecontent=fil;
-})
+// ####################################### #
+// DO NOT CHANGE ANYTHING BELOW THIS LINE. #
+// ####################################### #
 
-fs.readFile("registration.html",
-(err,regf) => {
-    if(err)
-    {
-        throw err;
-    }
- reg=regf;
-})
-let args=require("minimist")(process.argv.slice(2));
-http.createServer((request,response) =>{
-    let url =request.url
-    response.writeHeader(200,{"Content-type":"text/html"})
-    switch (url)
-    {
-        case "/project":
-            response.write(filecontent)
-            response.end();
-            break
-        case "/registration":
-            response.write(reg)
-            response.end();
-            break;
-        default:
-            response.write(homecontent)
-            response.end();
-            break;
-    }
-}).listen(args["port"]);
+const todos = todoList();
+
+const formattedDate = d => {
+  return d.toISOString().split("T")[0]
+}
+
+var dateToday = new Date()
+const today = formattedDate(dateToday)
+const yesterday = formattedDate(
+  new Date(new Date().setDate(dateToday.getDate() - 1))
+)
+const tomorrow = formattedDate(
+  new Date(new Date().setDate(dateToday.getDate() + 1))
+)
+
+todos.add({ title: 'Submit assignment', dueDate: yesterday, completed: false })
+todos.add({ title: 'Pay rent', dueDate: today, completed: true })
+todos.add({ title: 'Service Vehicle', dueDate: today, completed: false })
+todos.add({ title: 'File taxes', dueDate: tomorrow, completed: false })
+todos.add({ title: 'Pay electric bill', dueDate: tomorrow, completed: false })
+
+console.log("My Todo-list\n\n")
+
+console.log("Overdue")
+var overdues = todos.overdue()
+var formattedOverdues = todos.toDisplayableList(overdues)
+console.log(formattedOverdues)
+console.log("\n\n")
+
+console.log("Due Today")
+let itemsDueToday = todos.dueToday()
+let formattedItemsDueToday = todos.toDisplayableList(itemsDueToday)
+console.log(formattedItemsDueToday)
+console.log("\n\n")
+
+console.log("Due Later")
+let itemsDueLater = todos.dueLater()
+let formattedItemsDueLater = todos.toDisplayableList(itemsDueLater)
+console.log(formattedItemsDueLater)
+console.log("\n\n")
