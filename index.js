@@ -1,70 +1,34 @@
 const todoList = () => {
-  all = []
+const all = [];
   const add = (todoItem) => {
-    all.push(todoItem)
-  }
+    all.push(todoItem);
+  };
   const markAsComplete = (index) => {
-    all[index].completed = true
-  }
-
+    all[index].completed = true;
+  };
+  const today = new Date().toLocaleDateString("en-CA");
   const overdue = () => {
-    // Write the date check condition here and return the array of overdue items accordingly.
-    // FILL YOUR CODE HERE
-    // ..
-    // ..
-    // ..
-    let ex1=[]
-    all.forEach(x => {
-        if(x["dueDate"]=== yesterday){
-            ex1.push(x);
-        }
-      })
-      return ex1;
-  }
+    return all.filter((dolist) => dolist.dueDate < today);
+  };
 
   const dueToday = () => {
-    // Write the date check condition here and return the array of todo items that are due today accordingly.
-    // FILL YOUR CODE HERE
-    // ..
-    // ..
-    // ..
-    let ex1=[]
-    all.forEach(x => {
-        if(x["dueDate"]=== today){
-            ex1.push({title:x["title"],completed:x["completed"]});
-        }
-      })
-      return ex1;
-  }
+    return all.filter((x) => today == x.dueDate);
+  };
 
   const dueLater = () => {
-    // Write the date check condition here and return the array of todo items that are due later accordingly.
-    // FILL YOUR CODE HERE
-    // ..
-    // ..
-    // ..
-    let ex1=[]
-    all.forEach(x => {
-        if(x["dueDate"]=== tomorrow){
-            ex1.push(x);
-        }
-      })
-      return ex1;
-  }
+    return all.filter((x) => x.dueDate > today);
+  };
 
   const toDisplayableList = (list) => {
-    // Format the To-Do list here, and return the output string as per the format given above.
-    // FILL YOUR CODE HERE
-    // ..
-    // ..
-    // ..
-    // return OUTPUT_STRING
-    
-    return list.map((todos) => { 
-      const complete=todos.completed ? 'x' : ' ';
-      return `[${complete}] ${todos.title} ${todos.dueDate == today ? ' ' : todos.dueDate}`
-  }).join("\n");
-  }
+    return list
+      .map((todos) => {
+        const complete = todos.completed ? "x" : " ";
+        return `[${complete}] ${todos.title} ${
+          todos.dueDate == today ? " " : todos.dueDate
+        }`;
+      })
+      .join("\n");
+  };
 
   return { all, add, markAsComplete, overdue, dueToday, dueLater, toDisplayableList };
 }
